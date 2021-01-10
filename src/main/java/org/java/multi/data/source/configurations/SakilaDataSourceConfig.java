@@ -27,7 +27,7 @@ public class SakilaDataSourceConfig {
 
     @Primary
     @Bean
-    @ConfigurationProperties("spring.datasource1")
+    @ConfigurationProperties(prefix = "spring.datasource1")
     public DataSourceProperties sakilaDSProperties(){
         return new DataSourceProperties();
     }
@@ -42,12 +42,13 @@ public class SakilaDataSourceConfig {
     @Bean
     public LocalContainerEntityManagerFactoryBean sakilaDSFactory(@Qualifier("sakilaDS") DataSource sakilaDS,
                                                                   EntityManagerFactoryBuilder builder){
-        return builder.dataSource(sakilaDS).packages(Actor.class).build();
+        return builder.dataSource(sakilaDS).packages("org.java.multi.data.source.sakila.model").build();
     }
 
     @Primary
     @Bean
-    public PlatformTransactionManager sakilaDSTransactionManager(EntityManagerFactory sakilaDSFactory){
+    public PlatformTransactionManager sakilaDSTransactionManager(@Qualifier("sakilaDSFactory")
+                                                                             EntityManagerFactory sakilaDSFactory){
         return new JpaTransactionManager(sakilaDSFactory);
     }
 

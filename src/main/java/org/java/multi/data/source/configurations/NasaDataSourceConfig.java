@@ -26,7 +26,7 @@ import javax.sql.DataSource;
 public class NasaDataSourceConfig {
 
     @Bean
-    @ConfigurationProperties("spring.datasource2")
+    @ConfigurationProperties(prefix = "spring.datasource2")
     public DataSourceProperties nasaDSProperties(){
         return new DataSourceProperties();
     }
@@ -39,11 +39,11 @@ public class NasaDataSourceConfig {
     @Bean
     public LocalContainerEntityManagerFactoryBean nasaDSFactory(@Qualifier("nasaDS") DataSource nasaDS,
                                                                 EntityManagerFactoryBuilder builder) {
-        return builder.dataSource(nasaDS).packages(Astronaut.class).build();
+        return builder.dataSource(nasaDS).packages("org.java.multi.data.source.nasa.model").build();
     }
 
     @Bean
-    public PlatformTransactionManager nasaDSTransactionManager(EntityManagerFactory nasaDSFactory) {
+    public PlatformTransactionManager nasaDSTransactionManager(@Qualifier("nasaDSFactory") EntityManagerFactory nasaDSFactory) {
         return new JpaTransactionManager(nasaDSFactory);
     }
 }
